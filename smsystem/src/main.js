@@ -4,6 +4,12 @@ import Vue from 'vue'
 import ElementUI from 'element-ui';  //组件代码js
 import 'element-ui/lib/theme-chalk/index.css';  //样式代码css
 
+// 引入axios
+import axios from 'axios';
+
+// 直接把axios挂载在Vue的原型上
+Vue.prototype.axios = axios;
+
 // base.css
 import '@/common/css/base.css';
 
