@@ -10,15 +10,7 @@ const connection = mysql.createConnection({
     password : 'root',    // 密码
     database : 'smsystem',       // 要连接的数据库的名字
     useConnectionPooling: true,
-    schema:{
-		tableName: 'session',
-		columnNames:{
-			session_id: 'session_id',
-            expires: 'expires',
-            data: 'data'
-		}
-	}
-
+    // port:'3307'
 })
 
 //执行链接
