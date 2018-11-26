@@ -154,7 +154,7 @@
 </script>
 
 <style lang="less">
-    .user-manage {
+.user-manage {
   width: 100%;
   display: flex; // 让这个盒子 变为一个可以伸缩的盒子
   flex-direction: column; // 方向是 纵向

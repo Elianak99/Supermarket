@@ -31,6 +31,7 @@
     </div>
 </template>
 <script>
+import qs from 'qs'
   export default {
     data() {
         const confirmPass=(rule,value,callback)=>{
@@ -53,7 +54,7 @@
         loginRules: {
           userName: [
             { required: true, message: '账号不能为空', trigger: 'blur' }, // 非空验证
-            { min: 6, max: 12, message: '长度必须 6 到 12 个字符', trigger: 'blur' } // 长度验证
+            { min: 4, max: 12, message: '长度必须 4 到 12 个字符', trigger: 'blur' } // 长度验证
           ],
           pass: [
            { required: true, message: '密码不能为空', trigger: 'blur' }, // 非空验证
@@ -69,12 +70,31 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('前端验证成功');
-            let userName = this.loginForm.userName;
-            let pass = this.loginForm.pass;
-
-             // 通过路由跳转 跳转到后端系统首页
-             this.$router.push('/')
+            //收集用户信息
+            let params = {
+                username : this.loginForm.userName,
+                password : this.loginForm.pass,
+            }
+            //允许携带cookies
+            this.axios.defaults.withCredentials=true
+            //将用户名密码发送给后端
+            this.axios.post('http://192.168.20.97:3000/users/checklogin',
+            qs.stringify(params),
+            {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
+            ).then(response=>{
+                if(response.data.rstCode === 1){
+                    this.$message({
+                        type:'success',
+                        message:response.data.msg
+                    });
+                //跳转到首页
+                setTimeout(()=>{
+                    this.$router.push('/')
+                },500)
+                }else{
+                    this.$message.error(response.data.msg)
+                }
+            })
           } else {
             console.log('验证失败不能登录！');
             return false;
@@ -92,24 +112,26 @@
         height:100%;
         background:url('../../../public/images/4.jpg');
     }
-    .login-form{
-        width:500px;
-        height:300px;
-        padding:30px;
-        position:fixed;
-        top:0;
-        left:0;
-        right:0;
-        bottom:0;
-        margin:auto;
-        h1{
-            text-align:center;
-            color:white;
-            font-weight:200;
-            font-size:30px;
+    .login{
+        .login-form{
+            width:500px;
+            height:300px;
+            padding:30px;
+            position:fixed;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            margin:auto;
+            h1{
+                text-align:center;
+                color:white;
+                font-weight:200;
+                font-size:30px;
+            }
         }
-    }
-    .el-form-item__label{
-        color:white
+        .el-form-item__label{
+            color:white
+        }
     }
 </style>

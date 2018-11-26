@@ -114,6 +114,25 @@ export default {
   width: 100%;
   display: flex; //让这个盒子 变为一个可以伸缩的盒子
   flex-direction: column; //方向是 纵向
+    p{  
+        span{
+            color:red
+        }
+        margin:0;
+        padding:0;
+        height:30px;
+        line-height:20px;
+    }
+    .tip{
+        margin-bottom:15px;
+        color:rgba(0,0,0,.5)
+    }
+    form .el-button{
+        margin:0 !important;
+    }
+    .el-input__inner{
+        margin:0 !important;
+    }
   // 主体
   .el-main {
     flex: 1; //自动增长， 撑满
@@ -129,23 +148,5 @@ export default {
     }
   }
 }
-p{  
-    span{
-        color:red
-    }
-    margin:0;
-    padding:0;
-    height:30px;
-    line-height:20px;
-}
-.tip{
-    margin-bottom:15px;
-    color:rgba(0,0,0,.5)
-}
-form .el-button{
-    margin:0 !important;
-}
-.el-input__inner{
-    margin:0 !important;
-}
+
 </style>
