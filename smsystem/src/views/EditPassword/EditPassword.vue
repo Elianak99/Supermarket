@@ -9,6 +9,7 @@
                 <div slot="header" class="clearfix">
                     <span>密码修改</span>
                 </div>
+
                 <!-- 面板内容 -->
                 <div class="text item">
                     <!-- 添加账户表单 -->
@@ -25,7 +26,7 @@
                         <el-form-item label="确认新密码" prop="confirmPwd">
                             <el-input type="text" v-model="editPwdForm.confirmPwd"></el-input>
                         </el-form-item>
-
+                       
                         <!-- 添加按钮 -->
                         <el-form-item>
                             <el-button type="primary" @click="submitForm('editPwdForm')">修改</el-button>
@@ -40,109 +41,112 @@
     </div>
 </template>
 <script>
-// axios 自带一个依赖库qs 主要帮我们处理post请求的参数问题
-import qs from 'qs';
+// axios自带一个依赖库 qs 主要帮我们处理post请求的参数问题
+import qs from 'qs'
 
-// 引入头部组件和尾部组件
-import Header from '@/components/Header/Header.vue';
-import Footer from '@/components/Footer/Footer.vue';
+// 引入头部组件 和 尾部组件
+import Header from "@/components/Header/Header.vue";
+import Footer from "@/components/Footer/Footer.vue";
 
-export default {   
-    // 注册组件
-    components:{
-        Header,
-        Footer
-    },
-    data(){
-        // 自定义验证规则，验证旧密码是否正确
-        const checkOldPwd = (rule,value,callback)=>{
-            // 发送请求 验证旧密码是否正确，（把用户输入的旧密码传给后端）
-            this.axios.get(`http://127.0.0.1:3000/users/checkoldpwd?oldPwd=${value}`)
-            .then(response => {
-                // 如果正确 那么通过，直接绿色勾勾
-                if(response.data.rstCode === 1){
-                    // 直接调用就是验证通过
-                    callback();
-                }else if(response.data.rstCode === 0){
-                    // 否则 就是旧密码不正确
-                    callback(new Error(response.data.msg));
-                }
-            })
-        },
-        // 自定义一个验证密码一致性的函数
-        const checkPwd = (rule,value,callback)=>{
-            // 非空验证
-            if(value === ''){
-                // 输出不能为空的提示
-                callback(new Error("请再次输入密码！"));
-            }else if(value !== this.editPwdForm.newPwd){
-                // 输入密码不一致的回调
-                callback(new Error("两次密码输入的不一致！"));
-            }else{
-                // 成功提示
+export default {
+  // 注册组件
+  components: {
+    Header,
+    Footer
+  },
+  data() {
+    // 自定义验证规则 -- 验证旧密码是否正确
+    const checkOldPwd = (rule, value, callback) => {
+        // 发送请求 验证旧密是否正确 (把用户输入的旧密码传给后端)
+        this.axios.get(`http://127.0.0.1:3000/users/checkoldpwd?oldPwd=${value}`)
+        .then(response => {
+            // 如果正确 那么通过 直接绿色勾勾
+            if (response.data.rstCode === 1) {
+                // 直接调用就是验证通过
                 callback();
+            } else if (response.data.rstCode === 0) {
+                // 否则 就是旧密码不正确
+                callback(new Error(response.data.msg))
             }
-        };
-        return {
-            // 修改密码表单数据对象
-            editPwdForm:{
-                oldPwd:"",
-                newPwd:"",
-                confirmPwd:""
-            },
-            // 验证的字段
-            rules:{
-                // 验证旧密码，验证是否正确
-                oldPwd:[
-                    {required:true,validator:checkOldPwd,trigger:"blur"}
-                ],
-                // 验证新密码
-                newPwd:[
-                    {required:true,message:"新密码不能为空",trigger:"blur"},
-                    {min:3,max:6,message:"长度必须3到6个字符",trigger:"blur"}
-                ],
-                // 验证确认密码，自定义验证规则（validator:自己定义的函数名字）
-                confirmPwd:[
-                    {required:true,validator:checkPwd,trigger:"blur"}
-                ]
-            }
+        })
+    }
+    // 自定义一个验证密码一致性的函数
+    const checkPwd = (rule, value, callback) => {
+      // 非空验证
+      if (value === "") {
+        // 输出不能为空的提示
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.editPwdForm.newPwd) {
+        // 一致性验证
+        // 输出密码不一致的回调
+        callback(new Error("两次密码不一致"));
+      } else {
+        // 成功提示（绿色勾勾）
+        callback();
+      }
+    };
+    return {
+      // 修改密码表单数据对象
+      editPwdForm: {
+        oldPwd: "",
+        newPwd: "",
+        confirmPwd: "",
+      },
+      // 验证的字段
+      rules: {
+        // 验证旧密码-验证是否正确
+        oldPwd: [
+          { required: true, validator: checkOldPwd, trigger: "blur" } 
+        ],
+        // 验证新密码
+        newPwd: [
+          { required: true, message: "新密码不能为空", trigger: "blur" }, // 非空验证
+          { min: 3, max: 6, message: "长度必须 3 到 6 个字符", trigger: "blur" } // 长度验证
+        ],
+        // 验证确认密码 --- 自定义验证规则（validator： 自己定义的函数的名字）
+        confirmPwd: [
+          { required: true, validator: checkPwd, trigger: "blur" } 
+        ]
+      }
+    }
+  },
+  methods: {
+    // 表单提交触发的函数
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          // 发送一个请求 把修改后的新密码发送给后端
+          this.axios.get(`http://127.0.0.1:3000/users/savenewpwd?newPwd=${this.editPwdForm.newPwd}`)
+            .then(response => {
+              // 接收后端响应的数据 判断
+              if (response.data.rstCode === 1) {
+                // 成功
+                // 弹出成功的提示
+                this.$message({
+                  type: 'success',
+                  message: response.data.msg
+                }) 
+                // 跳转到登录页面
+                setTimeout(() => {
+                  this.$router.push('/login')
+                }, 1000)
+              } else {
+                // 弹出失败的提示
+                this.$message.error(response.data.msg);
+              }
+            })
+         
+        } else {
+          console.log("前端验证不通过, 不能发送");
+          return false;
         }
+      });
     },
-    methods:{
-        // 表单提交触发的函数
-        submitForm(formName){
-            this.$refs[formName].Validate(valid=>{
-                if(valid){
-                    // 发送一个请求，把修改后的新密码发送给后端
-                    this.axios.get(`http://127.0.0.1:3000/users/savenewpwd?newPwd=${this.editPwdForm.newPwd}`)
-                    .then(response=>{
-                        // 接收后端响应的数据判断
-                        if(response.data.rstCode === 1){
-                            // 成功，弹出成功的提示
-                            this.$message({
-                                type:"success",
-                                message:response.data.msg
-                            })
-                            // 跳转到登录页面
-                            setTimeout(()=>{
-                                this.$router.push('/login')
-                            },1000);
-                        }else{
-                            // 弹出失败的提示
-                            this.$message.error(response.data.msg);
-                        }
-                    })
-                }else{
-                    console.log("前端验证不通过，不能发送！");
-                    return false;
-                }
-            });
-        },
-        // 重置表单触发的函数
-        resetForm(formName){
-            this.$refs[formName].resetFields();
-        }
-    }    
+    // 重置表单触发的函数
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    }
+  }
 };
 </script>
 <style lang="less">
@@ -161,23 +165,23 @@ export default {
       }
       .el-card__body {
         .item {
-          .el-form {
-            width: 300px;
-            .el-form-item {
-              .el-form-item__label {
-                height: 35px;
-                line-height: 35px;
-              }
-              .el-form-item__content {
-                height: 35px;
-                line-height: 35px;
-                .el-input__inner {
-                  height: 35px;
-                  line-height: 35px;
+            .el-form {
+                width: 300px;
+                .el-form-item {
+                    .el-form-item__label {
+                        height: 35px;
+                        line-height: 35px;
+                    }
+                    .el-form-item__content {
+                        height: 35px;
+                        line-height: 35px;
+                        .el-input__inner {
+                            height: 35px;
+                            line-height: 35px;
+                        }
+                    }
                 }
-              }
             }
-          }
         }
       }
     }

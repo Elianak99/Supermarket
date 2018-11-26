@@ -8,26 +8,57 @@
             <!-- 当前登录用户名 -->
             <div class="username">
                 <!-- 下拉框 -->
-                <el-dropdown trigger="click">
+                <el-dropdown trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
-                        Admin <i class="el-icon-arrow-down el-icon--right"></i>
+                       {{username}}  <i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>个人中心</el-dropdown-item>
-                        <el-dropdown-item>退出登录</el-dropdown-item>
+                        <el-dropdown-item command="personal">个人中心</el-dropdown-item>
+                        <el-dropdown-item command="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
                 <div class="avatar">
-                    <img style="border-radius: 50%;" width="50px" height="50px" src="./avatar.jpg" alt="">
+                    <img style="border-radius: 50%;" width="50px" height="50px" src="./1.png" alt="">
                 </div>
             </div>
         </el-header>
     </div>
 </template>
 <script>
-export default {   
-
-}
+    export default {   
+        data(){
+            return{
+                username:''
+            }
+        },
+        methods:{
+            handleCommand(command){
+                if(command === 'personal'){
+                    this.$router.push('/personal')
+                }else if(command === 'logout'){
+                    this.axios.get('http://127.0.0.1:3000/users/logout')
+                    .then(response=>{
+                        if(response.data.rstCode === 1){
+                            this.$message({
+                                type:'success',
+                                message:response.data.msg
+                            })
+                            setTimeout(()=>{
+                                this.$router.push('/login')
+                            },1000)
+                        }
+                    })
+                }
+            }
+        },
+        created() {
+            //发送请求拿用户名
+            this.axios.get('http://127.0.0.1:3000/users/getusername')
+            .then(response=>{
+                this.username=response.data
+            })
+        },
+    }
 </script>
 <style lang="less">
     // 头

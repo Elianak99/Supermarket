@@ -161,25 +161,6 @@ export default {
 </script>
 <style lang="less">
 .goods-manage {
-  width: 100%;
-  display: flex; //让这个盒子 变为一个可以伸缩的盒子
-  flex-direction: column; //方向是 纵向
-  // 主体
-  .el-main {
-    flex: 1; //自动增长， 撑满
-    .el-card {
-      .el-card__header {
-        font-weight: 700;
-        font-size: 15px;
-        background-color: #f1f1f1;
-      }
-      .el-card__body {
-        .item {
-        }
-      }
-    }
-  }
-}
 .el-dropdown{
     height:50px;
     line-height:50px;
@@ -219,5 +200,26 @@ form{
         display:inline-block
     }
 }
+
+  width: 100%;
+  display: flex; //让这个盒子 变为一个可以伸缩的盒子
+  flex-direction: column; //方向是 纵向
+  // 主体
+  .el-main {
+    flex: 1; //自动增长， 撑满
+    .el-card {
+      .el-card__header {
+        font-weight: 700;
+        font-size: 15px;
+        background-color: #f1f1f1;
+      }
+      .el-card__body {
+        .item {
+        }
+      }
+    }
+  }
+}
+
 
 </style>
