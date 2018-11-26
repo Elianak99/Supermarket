@@ -88,7 +88,7 @@ export default {
         // 验证用户名
         username: [
           { required: true, message: "账号不能为空", trigger: "blur" }, // 非空验证
-          { min: 6, max: 12, message: "长度必须 6 到 12 个字符", trigger: "blur" } // 长度验证
+          { min: 4, max: 12, message: "长度必须 4 到 12 个字符", trigger: "blur" } // 长度验证
         ],
         // 验证密码
         password: [

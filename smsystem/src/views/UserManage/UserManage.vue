@@ -1,77 +1,90 @@
 <template>
-    <div class="user-manage">
-        <!-- 头部 -->
-        <Header></Header>
-        <!-- 主体 -->
-        <el-main>
-            <el-card class="box-card">
-                <!-- 面板标题 -->
-                <div slot="header" class="clearfix">
-                    <span>账号管理</span>
-                </div>
-                <!-- 面板内容 -->
-                <div class="text item">
-                    <!-- 账号管理列表 -->
-                    <el-table ref="userlist" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-                        <!-- 选择框 -->
-                        <el-table-column type="selection">
-                        </el-table-column>
-                        <!-- 用户名称 -->
-                        <el-table-column prop="username" label="用户名称">
-                        </el-table-column>
-                        <!-- 用户组别 -->
-                        <el-table-column prop="usergroup" label="用户组">
-                        </el-table-column>
+  <div class="user-manage">
+    <!-- 头部 -->
+    <Header></Header>
+    <!-- 主体 -->
+    <el-main>
+      <el-card class="box-card">
+        <!-- 面板标题 -->
+        <div slot="header" class="clearfix">
+          <span>账号管理</span>
+        </div>
+        <!-- 面板内容 -->
+        <div class="text item">
+          <!-- 账号管理列表 -->
+          <el-table ref="userlist" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+            <!-- 选择框 -->
+            <el-table-column type="selection">
+            </el-table-column>
+            <!-- 用户名称 -->
+            <el-table-column prop="username" label="用户名称">
+            </el-table-column>
+            <!-- 用户组别 -->
+            <el-table-column prop="usergroup" label="用户组">
+            </el-table-column>
 
-                        <!-- 日期 -->
-                        <el-table-column label="日期">
-                            <template slot-scope="scope">{{ scope.row.cdate | formatCdate }}</template>
-                        </el-table-column>
-                        <!-- 操作 -->
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <el-button size="mini" type="primary" @click="handleEdit(scope.row.id)"><i class="el-icon-edit"></i>修改</el-button>
-                                <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)"><i class="el-icon-delete"></i>删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <!-- 修改弹出的模态框 -->
-                    <el-dialog title="修改用户" :visible.sync="dialogFormVisible" width="40%">
-                        <!-- 修改用户表单 -->
-                        <el-form :model="editForm" status-icon :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
-                            <!-- 账号 -->
-                            <el-form-item label="账号" prop="username">
-                                <el-input type="text" v-model="editForm.username" autocomplete="off"></el-input>
-                            </el-form-item>
-                            <!-- 密码 -->
-                            <el-form-item label="密码" prop="password">
-                                <el-input type="text" v-model="editForm.password" autocomplete="off"></el-input>
-                            </el-form-item>
-                            <!-- 用户组 -->
-                            <el-form-item label="选择用户组" prop="usergroup">
-                                <el-select v-model="editForm.usergroup" placeholder="请选择用户组">
-                                    <el-option label="超级管理员" value="超级管理员"></el-option>
-                                    <el-option label="普通用户" value="普通用户"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-form>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="dialogFormVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="submitForm('editForm')">确 定</el-button>
-                        </div>
-                    </el-dialog>
+            <!-- 日期 -->
+            <el-table-column label="日期">
+              <template slot-scope="scope">{{ scope.row.cdate | formatCdate }}</template>
+            </el-table-column>
+            <!-- 操作 -->
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button size="mini" type="primary" @click="handleEdit(scope.row.id)"><i class="el-icon-edit"></i>修改</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)"><i class="el-icon-delete"></i>删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <!-- 修改弹出的模态框 -->
+          <el-dialog title="修改用户" :visible.sync="dialogFormVisible" width="40%">
+            <!-- 修改用户表单 -->
+            <el-form :model="editForm" status-icon :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
+              <!-- 账号 -->
+              <el-form-item label="账号" prop="username">
+                <el-input type="text" v-model="editForm.username" autocomplete="off"></el-input>
+              </el-form-item>
+              <!-- 密码 -->
+              <el-form-item label="密码" prop="password">
+                <el-input type="text" v-model="editForm.password" autocomplete="off"></el-input>
+              </el-form-item>
+              <!-- 用户组 -->
+              <el-form-item label="选择用户组" prop="usergroup">
+                <el-select v-model="editForm.usergroup" placeholder="请选择用户组">
+                  <el-option label="超级管理员" value="超级管理员"></el-option>
+                  <el-option label="普通用户" value="普通用户"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="submitForm('editForm')">确 定</el-button>
+            </div>
+          </el-dialog>
 
-                    <!-- 选择按钮 -->
-                    <div style="margin-top: 20px">
-                        <el-button type="danger" @click="batchDel">批量删除</el-button>
-                        <el-button @click="toggleSelection">取消选择</el-button>
-                    </div>
-                </div>
-            </el-card>
-        </el-main>
-        <!-- 尾部 -->
-        <Footer></Footer>
-    </div>
+          <!-- 分页组件 -->
+          <div style="margin-top: 20px">
+            <el-pagination 
+            @size-change="handleSizeChange" 
+            @current-change="handleCurrentChange" 
+            :current-page="currentPage" 
+            :page-sizes="[1, 3, 5, 10, 20, 50]" 
+            :page-size="pageSize" 
+            layout="total, sizes, prev, pager, next, jumper" 
+            :total="totalCount">
+            </el-pagination>
+          </div>
+
+          <!-- 批量删除按钮 -->
+          <div style="margin-top: 20px">
+            <el-button type="danger" @click="batchDel">批量删除</el-button>
+            <el-button @click="toggleSelection">取消选择</el-button>
+          </div>
+        </div>
+      </el-card>
+    </el-main>
+    <!-- 尾部 -->
+    <Footer></Footer>
+  </div>
 </template>
 
 <script>
@@ -94,6 +107,9 @@ export default {
   // 数据
   data() {
     return {
+      totalCount:11,   //数据总条数
+      currentPage:1,   //当前页
+      pageSize:3,      //默认每页显示3条
       dialogFormVisible: false, //控制修改模态框的显示和隐藏的变量
       tableData: [], //用户账号列表的数据
       editId: "", //保存要修改的数据的id
@@ -124,6 +140,20 @@ export default {
   },
   // 方法
   methods: {
+    // 当页面尺寸（每页显示多少条）改变，就触发这个函数，传入当前页面尺寸
+    handleSizeChange(val){
+      // 重置pageSize 的值
+      this.pageSize = val;
+      // 调用获取数据的函数
+      this.getUserListByPage();
+    },
+    // 当页码改变 就会触发这个函数，传入当前页码
+    handleCurrentChange(val){
+      // 重置当前页
+      this.currentPage = val;
+      // 调用获取数据的函数
+      this.getUserListByPage();
+    },
     // 编辑触发函数
     handleEdit(id) {
       // 把要修改的id保存到一个变量里
@@ -153,8 +183,9 @@ export default {
               type: "success",
               message: response.data.msg
             });
+
             // 重新请求一下所有的账号数据
-            this.getUserList();
+            this.getUserListByPage();
           } else {
             this.$message.error(response.data.msg);
           }
@@ -184,9 +215,7 @@ export default {
         idArr: JSON.stringify(idArr) //把数组转为字符串
       };
       // 发送一个ajax请求，把这个id数组（里面是需要批量删除的数据的id）发送给后端
-      this.axios
-        .post(
-          "http://127.0.0.1:3000/users/batchdel",
+      this.axios.post("http://127.0.0.1:3000/users/batchdel",
           qs.stringify(param), //处理参数
           { Header: { "Content-Type": "application/x-www-form-urlencoded" } } //设置请求头
         )
@@ -199,7 +228,7 @@ export default {
               message: response.data.msg
             });
             // 刷新页面（重新获取一下最新数据）
-            this.getUserList();
+            this.getUserListByPage();
           } else {
             // 失败 弹出错误信息
             this.$message.error(response.data.msg);
@@ -207,13 +236,38 @@ export default {
         });
     },
     // 封装一个请求所有用户账号数据的函数
-    getUserList() {
-      // 发送ajax请求 获取所有数据
-      this.axios.get("http://127.0.0.1:3000/users/userlist").then(response => {
-        // 直接把请求到的所有用户账号的数据，赋值给tableData 渲染用户账号列表
-        this.tableData = response.data;
+    // getUserList() {
+    //   // 发送ajax请求 获取所有数据
+    //   this.axios.get("http://127.0.0.1:3000/users/userlist").then(response => {
+    //     // 直接把请求到的所有用户账号的数据，赋值给tableData 渲染用户账号列表
+    //     this.tableData = response.data;
+    //   });
+    // },
+
+    // 按照分页请求数据
+    getUserListByPage(){
+      // 获取当前页码
+      let currentPage = this.currentPage;
+      // 获取当前页面尺寸pageSize (每页显示多少条)
+      let pageSize = this.pageSize;
+      // 发送ajax请求，按照分页请求数据
+      this.axios.get(`http://127.0.0.1:3000/users/userlistbypage?currentPage=${currentPage}&pageSize=${pageSize}`)
+      .then(response => {
+        // 把后端返回的对应页码的数据 赋值给tableData
+        this.tableData = response.data.data;
+        // 把后端返回的数据总条数 赋值给 totalCount
+        this.totalCount = response.data.totalCount;
+
+        // 如果当前页码没有数据，且 不是第一页
+        if(!response.data.data.length && this.currentPage != 1){
+          // 当前页码减去1
+          this.currentPage -= 1;
+          // 再次调用自己
+          this.getUserListByPage();
+        }
       });
     },
+
     // 修改表单 提交函数
     // 表单提交触发的函数
     submitForm(formName) {
@@ -227,10 +281,14 @@ export default {
             editId: this.editId
           };
           // 发送ajax 把修改后的新数据 和 原来的id 一起发送给后端
-          this.axios.post("http://127.0.0.1:3000/users/saveedit", 
-              qs.stringify(params), {
-              Header: { "Content-Type": "application/x-www-form-urlencoded" }
-            })
+          this.axios
+            .post(
+              "http://127.0.0.1:3000/users/saveedit",
+              qs.stringify(params),
+              {
+                Header: { "Content-Type": "application/x-www-form-urlencoded" }
+              }
+            )
             .then(response => {
               // 根据后端响应的数据判断
               if (response.data.rstCode === 1) {
@@ -240,7 +298,7 @@ export default {
                   message: response.data.msg
                 });
                 // 重新调用一下获取数据的方法（刷新一遍页面，获取最新数据）
-                this.getUserList();
+                this.getUserListByPage();
               } else {
                 this.$message.error(response.data.msg);
               }
@@ -258,7 +316,7 @@ export default {
   // 生命周期钩子函数（vue实例创建完成，但是还没有挂载dom 适合请求数据） 只要进入组件，组件就会经历这个周期，会自动触发这个函数
   created() {
     // 调用请求所有数据的函数
-    this.getUserList();
+    this.getUserListByPage();
   },
   // 过滤器
   filters: {
@@ -291,13 +349,13 @@ export default {
           .el-dialog__body {
             .el-form {
               width: 80%;
-              .el-form-item__label{
-                color:#000;
+              .el-form-item__label {
+                color: #000;
               }
-              .el-form-item__content{
-                .el-input{
-                  .el-input__inner{
-                    margin-top:0;
+              .el-form-item__content {
+                .el-input {
+                  .el-input__inner {
+                    margin-top: 0;
                   }
                 }
               }
