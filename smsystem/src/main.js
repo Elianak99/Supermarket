@@ -30,15 +30,15 @@ router.beforeEach((to, from, next) => {
     .then(response => {
       isLogin = response.data.isLogin;
       // 如果已经登录 直接放行
-      // if (!isLogin) {
-      //   if (to.path !== '/login') {
-      //     return next({'path': '/login'})
-      //   } else {
-      //     next()
-      //   }
-      // } else {
-      //   next();
-      // }
+      if (!isLogin) {
+        if (to.path !== '/login') {
+          return next({'path': '/login'})
+        } else {
+          next()
+        }
+      } else {
+        next();
+      }
     })
 
   // 放行

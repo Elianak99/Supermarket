@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
     password : 'root',    // 密码
     database : 'smsystem',       // 要连接的数据库的名字
     useConnectionPooling: true,
-    // port:'3307'
+    port:'3307'
 })
 
 //执行链接

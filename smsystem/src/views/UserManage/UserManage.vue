@@ -125,7 +125,7 @@ export default {
         //验证用户名
         username: [
           { required: true, message: "账号不能为空", trigger: "blur" },
-          { min: 6, max: 12, message: "长度必须6到12个字符", trigger: "blur" }
+          { min: 4, max: 12, message: "长度必须4到12个字符", trigger: "blur" }
         ],
         // 验证密码
         password: [
@@ -207,7 +207,7 @@ export default {
       let idArr = this.selectedUser.map(v => v.id);
       // 判断 如果没有选中任何数据 那么就弹出请选择以后再操作 直接返回
       if (!idArr.length) {
-        this.$message.error("请选择以后再操作，你是不是傻！");
+        this.$message.error("请选择要删除的选项！");
         return;
       }
       // 收集参数

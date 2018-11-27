@@ -73,7 +73,7 @@ router.get('/logout', (req, res) => {
   res.clearCookie('username');
 
   // 返回给前端 退出登录成功的信息
-  res.send({"rstCode":1, "msg":"退出成功, 欢迎回来! 哥哥！"})
+  res.send({"rstCode":1, "msg":"退出成功, 欢迎下次登录！"})
 })
 
 /**
@@ -183,26 +183,27 @@ router.post('/adduser', (req, res) => {
   })
 })
 
+
 /**
  * 接收用户账号列表请求（所有数据） /userslist
  */
-// router.get('/userlist', (req, res) => {
+router.get('/userlist', (req, res) => {
 
-//   // 构造sql 查询所有用户账号数据 
-//   /* 
-//     order by 字段 修饰符（asc desc） 按照这个字段排序 默认是升序 asc是升序 desc是降序
-//   */
-//   const sqlStr = 'select * from users order by cdate desc' 
-//   // 执行sql语句
-//   connection.query(sqlStr, (err, data) => {
-//     if (err) {
-//       throw err // 如果有错 抛出错误
-//     } else {
-//       // 否则 把查询到的所有用户账号数据 响应（返回）给前端
-//       res.send(data)
-//     }
-//   })
-// })
+  // 构造sql 查询所有用户账号数据 
+  /* 
+    order by 字段 修饰符（asc desc） 按照这个字段排序 默认是升序 asc是升序 desc是降序
+  */
+  const sqlStr = 'select * from users order by cdate desc' 
+  // 执行sql语句
+  connection.query(sqlStr, (err, data) => {
+    if (err) {
+      throw err // 如果有错 抛出错误
+    } else {
+      // 否则 把查询到的所有用户账号数据 响应（返回）给前端
+      res.send(data)
+    }
+  })
+})
 
 router.get('/userlistbypage', (req, res) => {
 
@@ -254,10 +255,10 @@ router.get('/deluser', (req, res) => {
       // 根据结果判断 如果受影响行数 > 0 就是删除成功
       if (data.affectedRows > 0) {
         // 返回删除成功的信息给前端
-        res.send({"rstCode": 1, "msg":"删除成功,哈哈！"})
+        res.send({"rstCode": 1, "msg":"删除成功！"})
       } else {
         // 否则就是删除失败 返回删除失败的信息给前端
-        res.send({"rstCode": 0, "msg":"删除失败,呵呵!"})
+        res.send({"rstCode": 0, "msg":"删除失败!"})
       }
     }
   })
